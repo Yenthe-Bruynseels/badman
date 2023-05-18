@@ -142,13 +142,7 @@
     "subevent": {
       "max": "Max level",
       "max-base": "Max basis team index",
-      "min-base": "Min basis team index",
-      "name": {
-        "none": "No sub-events",
-        "plural": "{count} sub-events",
-        "singular": "1 sub-event"
-      },
-      "title": "Departments"
+      "min-base": "Min basis team index"
     },
     "team-assembly": {
       "avg-level": "",

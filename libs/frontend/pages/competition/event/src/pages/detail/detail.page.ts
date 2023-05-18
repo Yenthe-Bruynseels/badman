@@ -1,14 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  Injector,
-  OnInit,
-  Signal,
-  TemplateRef,
-  inject,
-  signal,
-} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -19,10 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ClaimService } from '@badman/frontend-auth';
 import {
   HasClaimComponent,
   OpenCloseDateDialogComponent,
@@ -36,9 +25,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Apollo, gql } from 'apollo-angular';
 import { MomentModule } from 'ngx-moment';
 import { combineLatest, lastValueFrom } from 'rxjs';
-import { map, take, filter, startWith } from 'rxjs/operators';
 import { BreadcrumbService } from 'xng-breadcrumb';
-import { CompetitionEnrollmentsComponent } from './competition-enrollments/competition-enrollments.component';
 
 @Component({
   selector: 'badman-competition-detail',
@@ -66,28 +53,18 @@ import { CompetitionEnrollmentsComponent } from './competition-enrollments/compe
     MatCardModule,
     MatTooltipModule,
     MatSnackBarModule,
-    MatTabsModule,
 
     // Own modules
     PageHeaderComponent,
     JobsModule,
     HasClaimComponent,
-    CompetitionEnrollmentsComponent,
   ],
 })
 export class DetailPageComponent implements OnInit {
-  // injectors
-  authService = inject(ClaimService);
-  injector = inject(Injector);
-
-  // signals
-  canViewEnrollments?: Signal<boolean | undefined>;
-  currentTab = signal(0);
-
-  copyYearControl = new FormControl();
-
   eventCompetition!: EventCompetition;
   subEvents?: { eventType: string; subEvents: SubEventCompetition[] }[];
+
+  copyYearControl = new FormControl();
 
   constructor(
     private seoService: SeoService,
@@ -138,27 +115,6 @@ export class DetailPageComponent implements OnInit {
         'competition',
         translations['all.competition.title']
       );
-
-      // check if the query params contian tabindex
-      this.route.queryParams
-        .pipe(
-          startWith(this.route.snapshot.queryParams),
-          take(1),
-          filter((params) => params['tab']),
-          map((params) => params['tab'])
-        )
-        .subscribe((tabindex) => {
-          console.log('tabindex', tabindex);
-          this.currentTab.set(parseInt(tabindex, 10));
-        });
-
-      this.canViewEnrollments = toSignal(
-        this.authService.hasAnyClaims$([
-          'view-any:enrollment-competition',
-          `${this.eventCompetition.id}_view:enrollment-competition`,
-        ]),
-        { injector: this.injector }
-      );
     });
   }
 
@@ -199,8 +155,8 @@ export class DetailPageComponent implements OnInit {
   }
 
   setOpenClose() {
-    // open dialog
-    const ref = this.dialog.open(OpenCloseDateDialogComponent, {
+     // open dialog
+     const ref = this.dialog.open(OpenCloseDateDialogComponent, {
       data: { event: this.eventCompetition },
       width: '400px',
     });
@@ -280,15 +236,5 @@ export class DetailPageComponent implements OnInit {
     await lastValueFrom(
       this.jobsService.syncEventById({ id: this.eventCompetition.visualCode })
     );
-  }
-
-  setTab(index: number) {
-    this.currentTab.set(index);
-    this.router.navigate([], {
-      queryParams: {
-        tab: index === 0 ? undefined : index,
-      },
-      queryParamsHandling: 'merge',
-    });
   }
 }

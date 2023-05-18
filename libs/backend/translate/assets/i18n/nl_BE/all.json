@@ -142,13 +142,7 @@
     "subevent": {
       "max": "Max klassement",
       "max-base": "Max basis ploegindex",
-      "min-base": "Min basis ploegindex",
-      "name": {
-        "none": "Geen afdelingen",
-        "plural": "{count} afdelingen",
-        "singular": "1 afdeling"
-      },
-      "title": "Afdelingen"
+      "min-base": "Min basis ploegindex"
     },
     "team-assembly": {
       "avg-level": "",

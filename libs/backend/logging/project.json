@@ -41,6 +41,12 @@
           "ci": true,
           "codeCoverage": true
         }
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   },
